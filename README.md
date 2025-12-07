@@ -2,7 +2,7 @@
 
 <p align="center"> <img src="https://img.shields.io/badge/Task-1-blue?style=for-the-badge" /> <img src="https://img.shields.io/badge/Python-3.10-yellow?style=for-the-badge&logo=python" /> <img src="https://img.shields.io/badge/MQTT-EMQX-brightgreen?style=for-the-badge&logo=mqtt" /> <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker" /> <img src="https://img.shields.io/badge/Data-PM2.5-red?style=for-the-badge" /> </p> <p align="center"><strong> 📡 Task 1 — Data Injector for PM2.5 IoT Sensor Streams Developed by <u>Khwaja Nawaz</u> </strong></p>
 
-<h2>📘 Task Overview</h2>
+<h2>📘 Task-1 Overview</h2>
 
 <p>
 The purpose of Task 1 is to design and implement a <strong>Data Injector</strong> that collects real PM2.5 sensor readings from the Urban Observatory API and publishes them to an <strong>EMQX MQTT broker</strong>, enabling downstream tasks to access live air-quality data.
@@ -68,3 +68,91 @@ The purpose of Task 1 is to design and implement a <strong>Data Injector</strong
 
 
 <p align="center"> <img src="https://img.shields.io/badge/Task-2-blue?style=for-the-badge" /> <img src="https://img.shields.io/badge/Python-3.10-yellow?style=for-the-badge&logo=python" /> <img src="https://img.shields.io/badge/MQTT-Subscriber-brightgreen?style=for-the-badge&logo=mqtt" /> <img src="https://img.shields.io/badge/AMQP-RabbitMQ-orange?style=for-the-badge&logo=rabbitmq" /> <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker" /> </p> <p align="center"><strong> 🧹 Task 2 — Data Preprocessing Operator Developed by <u>Khwaja Nawaz</u> </strong></p>
+
+<h2>🧹 Task 2 — Data Preprocessing Operator (MQTT → RabbitMQ)</h2>
+
+<p>
+Task 2 focuses on designing a <strong>Data Preprocessing Operator</strong> that subscribes to PM2.5 data from the MQTT broker, filters and cleans the readings, computes daily averages, and forwards the processed data to a RabbitMQ queue for use in Task 3.
+</p>
+
+<h3>📘 Task-2 Overview</h3>
+
+<p>
+The operator runs as a Dockerized service on the Edge VM, consuming PM2.5 messages published by Task 1 and transforming them into a clean, structured format suitable for machine learning and forecasting.
+</p>
+
+<h3>✅ Implementation Summary</h3>
+
+<ul>
+  <li>The <code>preprocess.py</code> script subscribes to the MQTT topic:</li>
+</ul>
+
+<pre><code>uo/pm25
+</code></pre>
+
+<ul>
+  <li>Incoming PM2.5 readings are collected in real time.</li>
+  <li>The script filters out <strong>outliers</strong>, specifically values <strong>greater than 50</strong>.</li>
+  <li>Valid readings are grouped by day (24-hour window) using their timestamps.</li>
+  <li>A <strong>daily average PM2.5 value</strong> is calculated for each day.</li>
+  <li>The processed results are published to RabbitMQ under the queue:</li>
+</ul>
+
+<pre><code>pm25_daily_avg
+</code></pre>
+
+<ul>
+  <li>The operator runs inside a Docker container, and logs can be viewed using:
+    <pre><code>docker logs preprocess</code></pre>
+  </li>
+  <li>The provided <code>docker-compose.yml</code> file launches both RabbitMQ and the preprocessing operator together.</li>
+</ul>
+
+<h3>🔗 Input and Output Topics/Queues</h3>
+
+<p><strong>Input (MQTT Topic from Task 1):</strong></p>
+<pre><code>uo/pm25
+</code></pre>
+
+<p><strong>Output (RabbitMQ Queue for Task 3):</strong></p>
+<pre><code>pm25_daily_avg
+</code></pre>
+
+<h3>📤 Example Processed Output</h3>
+
+<pre><code>{
+  "date": "2023-10-12",
+  "daily_avg": 16.73
+}
+</code></pre>
+
+<h3>🚀 How to Run the Preprocessing Operator</h3>
+
+<p><strong>1️⃣ Start RabbitMQ and Preprocessor Using Docker Compose</strong></p>
+<pre><code>docker compose up -d
+</code></pre>
+
+<p><strong>2️⃣ View Logs</strong></p>
+<pre><code>docker logs preprocess
+</code></pre>
+
+<p><strong>3️⃣ Run Without Docker (Testing Only)</strong></p>
+<pre><code>python3 preprocess.py
+</code></pre>
+
+<h3>🐳 Dockerfile Summary</h3>
+
+<ul>
+  <li>Installs required dependencies such as <code>paho-mqtt</code> and <code>pika</code>.</li>
+  <li>Copies the preprocessing script into the container.</li>
+  <li>Runs the operator automatically when the container starts.</li>
+</ul>
+
+<h3>🎯 Outcome</h3>
+
+<p>
+Task 2 successfully transforms raw PM2.5 sensor readings into clean, daily averaged values. The processed data is forwarded to RabbitMQ, enabling Task 3 to perform visualization and machine learning forecasting.
+</p>
+
+
+
