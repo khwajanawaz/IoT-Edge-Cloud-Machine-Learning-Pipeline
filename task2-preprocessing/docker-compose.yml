@@ -1,0 +1,18 @@
+services:
+  preproc:
+    build:
+      context: .   # ✅ Use current folder
+    container_name: preproc
+    environment:
+      - MQTT_HOST=localhost
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=uo/pm25
+
+      # RabbitMQ running on CLOUD VM
+      - RABBIT_HOST=192.168.0.100   # <--- replace with your real Cloud IP
+      - RABBIT_PORT=5672
+      - RABBIT_QUEUE=pm25_daily_avg
+
+    network_mode: "host"
+    restart: "no"
+
