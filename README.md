@@ -1,3 +1,25 @@
+<!-- ===== Task 3 Header Showcase ===== -->
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Task-3-blueviolet?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Python-3.10-yellow?style=for-the-badge&logo=python" />
+  <img src="https://img.shields.io/badge/Message_Broker-RabbitMQ-orange?style=for-the-badge&logo=rabbitmq" />
+  <img src="https://img.shields.io/badge/Time_Series-Prophet-red?style=for-the-badge&logo=python" />
+  <img src="https://img.shields.io/badge/Visualization-Matplotlib-0A66C2?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker" />
+</p>
+
+<p align="center">
+  <strong>
+    📈 Task 3 – Cloud Data Visualization & PM2.5 Forecasting<br/>
+    🔁 RabbitMQ Consumer · 📊 Trend Plots · 🤖 15-Day ML Prediction
+  </strong>
+</p>
+
+<hr/>
+
+
+
 <h2>📈 Task 3 — Cloud Data Visualization and Forecasting (RabbitMQ → ML Model)</h2>
 
 <p>
